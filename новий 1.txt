@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Електронна черга для 4-ї групи ХНУПС</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5dc; /* Бежевий фон */
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+        }
+        #controls, #queueSection {
+            margin: 20px 0;
+            text-align: center;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #queueList {
+            list-style: none;
+            padding: 0;
+        }
+        #queueList li {
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+        #nextPerson {
+            font-size: 20px;
+            font-weight: bold;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <h1>Електронна черга для 4-ї групи ХНУПС</h1>
+
+    <!-- Панель керування -->
+    <div id="controls">
+        <button id="startButton" onclick="startQueue()">Старт</button>
+        <button id="addButton" onclick="addToQueue()" disabled>Додати себе</button>
+        <button id="nextButton" onclick="nextInQueue()" disabled>Наступний</button>
+    </div>
+
+    <!-- Секція черги -->
+    <div id="queueSection">
+        <h3>Крайній у черзі:</h3>
+        <ul id="queueList"></ul>
+        <h3>Наступний:</h3>
+        <p id="nextPerson">Черга ще не розпочата</p>
+    </div>
+
+    <script>
+        const maxPeople = 30; // Максимальна кількість осіб
+        const queue = [];
+        let isQueueStarted = false;
+
+        function startQueue() {
+            if (isQueueStarted) {
+                alert('Черга вже запущена!');
+                return;
+            }
+            isQueueStarted = true;
+            document.getElementById('startButton').disabled = true;
+            document.getElementById('addButton').disabled = false;
+            document.getElementById('nextButton').disabled = false;
+            document.getElementById('nextPerson').textContent = 'Очікування першого учасника...';
+            alert('Черга розпочата!');
+        }
+
+        function addToQueue() {
+            if (queue.length >= maxPeople) {
+                alert('Максимальна кількість осіб у черзі досягнута!');
+                return;
+            }
+
+            const personName = prompt('Введіть своє ім’я:').trim();
+            if (personName) {
+                queue.push(personName);
+                updateQueueDisplay();
+            } else {
+                alert('Ім’я не може бути порожнім!');
+            }
+        }
+
+        function nextInQueue() {
+            if (queue.length === 0) {
+                alert('У черзі нікого немає!');
+                document.getElementById('nextPerson').textContent = 'Черга порожня';
+                return;
+            }
+            const nextPerson = queue.shift();
+            document.getElementById('nextPerson').textContent = `Зараз відповідає: ${nextPerson}`;
+            updateQueueDisplay();
+        }
+
+        function updateQueueDisplay() {
+            const queueList = document.getElementById('queueList');
+            queueList.innerHTML = '';
+            queue.forEach((person, index) => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `${index + 1}. ${person}`;
+                queueList.appendChild(listItem);
+            });
+        }
+    </script>
+</body>
+</html>
